@@ -1,7 +1,7 @@
 import json
 import re
 
-from services.gemini import generate_text
+from services.claude_ai import generate_text
 
 LESSON_SYSTEM_INSTRUCTION = """You are an expert curriculum designer who creates engaging, age-appropriate lessons for young students (ages 10-14). You help volunteer professionals turn their expertise into fun, interactive lessons.
 
@@ -54,13 +54,19 @@ Return a JSON object with EXACTLY this structure:
     "icon": "target",
     "content": "A memorable one-liner that summarizes the key lesson (1-2 sentences)"
   }},
+  "homework": {{
+    "title": "Take-Home Activity",
+    "icon": "home",
+    "content": "A brief description of a fun activity students can do at home to reinforce what they learned (1-2 sentences)",
+    "tasks": ["Task 1 - a specific thing to do at home", "Task 2 - another activity", "Task 3 - a creative or hands-on task"]
+  }},
   "jargonAlerts": [
     {{"term": "Technical Term 1", "simple": "Kid-friendly explanation"}},
     {{"term": "Technical Term 2", "simple": "Kid-friendly explanation"}}
   ]
 }}
 
-Make the lesson creative, fun, and memorable. The activity should be hands-on and get kids moving. Include at least 3-5 jargon alerts relevant to the profession and concept."""
+Make the lesson creative, fun, and memorable. The activity should be hands-on and get kids moving. The homework should be a fun take-home activity (like drawing, asking family members questions, observing something in their environment, or a simple experiment) - NOT a quiz or worksheet. Include at least 3-5 jargon alerts relevant to the profession and concept."""
 
 
 def generate_lesson(profession: str, concept: str, duration: str, age_group: str) -> dict:
@@ -135,6 +141,16 @@ def _fallback_lesson(profession: str, concept: str) -> dict:
             "title": "Takeaway",
             "icon": "target",
             "content": f"Understanding {concept.lower()} helps us see the world differently, and that's exactly what being a {profession.lower()} is all about!",
+        },
+        "homework": {
+            "title": "Take-Home Activity",
+            "icon": "home",
+            "content": f"Try exploring {concept.lower()} at home with these fun activities!",
+            "tasks": [
+                f"Draw or sketch something related to {concept.lower()} that you learned today",
+                f"Ask a family member what they know about {concept.lower()} and compare notes",
+                f"Find one example of {concept.lower()} in your daily life and write about it",
+            ],
         },
         "jargonAlerts": [
             {"term": "Expert", "simple": "Someone who knows a lot about a specific topic"},

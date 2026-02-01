@@ -3,11 +3,13 @@
 import { useEffect, useState } from "react"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
-import { Headphones, FileDown, Theater, AlertTriangle, ArrowLeft, Loader2, MessageSquare, Send } from "lucide-react"
+import { Theater, AlertTriangle, ArrowLeft, Loader2, MessageSquare, Send, Star, CheckCircle2, ClipboardList } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { Label } from "@/components/ui/label"
 import { cn } from "@/lib/utils"
 
 interface LessonContent {
@@ -17,6 +19,7 @@ interface LessonContent {
   materials: { title: string; icon: string; items: string[] }
   reflectionQuestions: { title: string; icon: string; questions: string[] }
   takeaway: { title: string; icon: string; content: string }
+  homework?: { title: string; icon: string; content: string; tasks: string[] }
   jargonAlerts: { term: string; simple: string }[]
 }
 
@@ -26,7 +29,10 @@ interface LessonData {
   concept: string
   duration: string
   ageGroup: string
+  status: string
   content: LessonContent
+  feedbackCount?: number
+  avgRating?: number
 }
 
 export default function LessonPage() {
@@ -41,6 +47,22 @@ export default function LessonPage() {
   const [editMessages, setEditMessages] = useState<{role: string; content: string}[]>([])
   const [editInput, setEditInput] = useState("")
   const [isEditing, setIsEditing] = useState(false)
+
+  // Feedback state
+  const [overallRating, setOverallRating] = useState(0)
+  const [hookEffectiveness, setHookEffectiveness] = useState(0)
+  const [conceptClarity, setConceptClarity] = useState(0)
+  const [activityEngagement, setActivityEngagement] = useState(0)
+  const [whatWentWell, setWhatWentWell] = useState("")
+  const [whatToImprove, setWhatToImprove] = useState("")
+  const [feedbackSubmitting, setFeedbackSubmitting] = useState(false)
+  const [feedbackSubmitted, setFeedbackSubmitted] = useState(false)
+
+  // Quiz state
+  const [hasQuiz, setHasQuiz] = useState(false)
+  const [quizLoading, setQuizLoading] = useState(false)
+
+  const isDelivered = lessonData?.status === "delivered"
 
   useEffect(() => {
     if (!lessonId) {
@@ -57,6 +79,10 @@ export default function LessonPage() {
       .then((data) => {
         setLessonData(data)
         setLoading(false)
+        // Check if quiz exists
+        fetch(`http://localhost:8000/api/lessons/${lessonId}/quiz`)
+          .then((r) => { if (r.ok) setHasQuiz(true) })
+          .catch(() => {})
       })
       .catch(() => {
         setError("Failed to load lesson. Is the backend running?")
@@ -82,11 +108,7 @@ export default function LessonPage() {
       if (!res.ok) throw new Error("Edit failed")
 
       const data = await res.json()
-
-      // Update the displayed lesson content
       setLessonData(prev => prev ? { ...prev, content: data.updatedContent } : null)
-
-      // Add AI response to chat
       const aiMsg = { role: "assistant", content: data.summary }
       setEditMessages(prev => [...prev, aiMsg])
     } catch {
@@ -94,6 +116,59 @@ export default function LessonPage() {
       setEditMessages(prev => [...prev, errorMsg])
     } finally {
       setIsEditing(false)
+    }
+  }
+
+  const handleFeedbackSubmit = async () => {
+    if (!lessonId || overallRating === 0) return
+    setFeedbackSubmitting(true)
+
+    try {
+      await fetch("http://localhost:8000/api/feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          lessonId: parseInt(lessonId),
+          type: "volunteer",
+          data: {
+            overallRating,
+            hookEffectiveness,
+            conceptClarity,
+            activityEngagement,
+            whatWentWell,
+            whatToImprove,
+          },
+        }),
+      })
+
+      setFeedbackSubmitted(true)
+      // Reload lesson to get updated status (now "delivered")
+      const res = await fetch(`http://localhost:8000/api/lessons/${lessonId}`)
+      if (res.ok) {
+        const updated = await res.json()
+        setLessonData(updated)
+      }
+    } catch {
+      // Show success anyway for UX
+      setFeedbackSubmitted(true)
+    } finally {
+      setFeedbackSubmitting(false)
+    }
+  }
+
+  const handleGenerateQuiz = async () => {
+    if (!lessonId) return
+    setQuizLoading(true)
+    try {
+      const res = await fetch(`http://localhost:8000/api/lessons/${lessonId}/quiz`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ numQuestions: 7 }),
+      })
+      if (!res.ok) throw new Error("Failed to generate quiz")
+      window.location.href = `/quiz?lessonId=${lessonId}`
+    } catch {
+      setQuizLoading(false)
     }
   }
 
@@ -123,6 +198,31 @@ export default function LessonPage() {
 
   const lesson = lessonData.content
 
+  const StarRating = ({ value, onChange, label }: { value: number; onChange: (v: number) => void; label: string }) => (
+    <div className="space-y-2">
+      <Label className="text-sm">{label}</Label>
+      <div className="flex gap-1">
+        {[1, 2, 3, 4, 5].map((star) => (
+          <button
+            key={star}
+            type="button"
+            onClick={() => onChange(star)}
+            className="p-0.5 transition-colors"
+          >
+            <Star
+              className={cn(
+                "h-6 w-6",
+                star <= value
+                  ? "fill-amber-400 text-amber-400"
+                  : "text-muted-foreground/30"
+              )}
+            />
+          </button>
+        ))}
+      </div>
+    </div>
+  )
+
   return (
     <main className="min-h-[calc(100vh-4rem)] px-4 py-8 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-4xl">
@@ -137,23 +237,56 @@ export default function LessonPage() {
           </Link>
           <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-foreground sm:text-3xl">
-                {lessonData.concept}
-              </h1>
+              <div className="flex items-center gap-3">
+                <h1 className="text-2xl font-bold text-foreground sm:text-3xl">
+                  {lessonData.concept}
+                </h1>
+                {isDelivered && (
+                  <Badge className="bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">
+                    <CheckCircle2 className="mr-1 h-3 w-3" />
+                    Delivered
+                  </Badge>
+                )}
+              </div>
               <p className="mt-1 text-muted-foreground">
                 by a {lessonData.profession} | {lessonData.duration} min | Ages {lessonData.ageGroup}
               </p>
             </div>
             <div className="flex flex-wrap gap-2">
-              <Button
-                variant={editMode ? "default" : "outline"}
-                size="sm"
-                className={cn("gap-2", !editMode && "bg-transparent")}
-                onClick={() => setEditMode(!editMode)}
-              >
-                <MessageSquare className="h-4 w-4" />
-                {editMode ? "Close Editor" : "Edit with AI"}
-              </Button>
+              {!isDelivered && (
+                <Button
+                  variant={editMode ? "default" : "outline"}
+                  size="sm"
+                  className={cn("gap-2", !editMode && "bg-transparent")}
+                  onClick={() => setEditMode(!editMode)}
+                >
+                  <MessageSquare className="h-4 w-4" />
+                  {editMode ? "Close Editor" : "Edit with AI"}
+                </Button>
+              )}
+              {hasQuiz ? (
+                <Button asChild size="sm" variant="outline" className="gap-2 bg-transparent">
+                  <Link href={`/quiz?lessonId=${lessonData.id}`}>
+                    <ClipboardList className="h-4 w-4" />
+                    View Quiz
+                  </Link>
+                </Button>
+              ) : (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="gap-2 bg-transparent"
+                  onClick={handleGenerateQuiz}
+                  disabled={quizLoading}
+                >
+                  {quizLoading ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <ClipboardList className="h-4 w-4" />
+                  )}
+                  {quizLoading ? "Generating..." : "Generate Quiz"}
+                </Button>
+              )}
               <Button asChild size="sm" className="gap-2">
                 <Link href={`/rehearse?lessonId=${lessonData.id}`}>
                   <Theater className="h-4 w-4" />
@@ -164,8 +297,8 @@ export default function LessonPage() {
           </div>
         </div>
 
-        {/* AI Edit Panel */}
-        {editMode && (
+        {/* AI Edit Panel - only for drafts */}
+        {editMode && !isDelivered && (
           <Card className="mb-6 border-primary/20">
             <CardHeader className="pb-3">
               <CardTitle className="text-lg">Edit with AI</CardTitle>
@@ -174,7 +307,6 @@ export default function LessonPage() {
               </p>
             </CardHeader>
             <CardContent className="space-y-4">
-              {/* Chat messages */}
               {editMessages.length > 0 && (
                 <div className="max-h-60 overflow-y-auto space-y-3">
                   {editMessages.map((msg, i) => (
@@ -194,7 +326,6 @@ export default function LessonPage() {
                   )}
                 </div>
               )}
-              {/* Input */}
               <div className="flex gap-2">
                 <Input
                   value={editInput}
@@ -322,6 +453,31 @@ export default function LessonPage() {
             </CardContent>
           </Card>
 
+          {/* Take-Home Activity */}
+          {lesson.homework && (
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="flex items-center gap-2 text-lg">
+                  <span className="text-xl" aria-hidden="true">{"🏠"}</span>
+                  {lesson.homework.title}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <p className="leading-relaxed text-foreground">{lesson.homework.content}</p>
+                <ol className="space-y-3">
+                  {lesson.homework.tasks.map((task, index) => (
+                    <li key={index} className="flex gap-3">
+                      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-medium text-primary">
+                        {index + 1}
+                      </span>
+                      <span className="text-foreground">{task}</span>
+                    </li>
+                  ))}
+                </ol>
+              </CardContent>
+            </Card>
+          )}
+
           {/* Jargon Alerts */}
           <Card>
             <CardHeader className="pb-3">
@@ -349,6 +505,112 @@ export default function LessonPage() {
               </div>
             </CardContent>
           </Card>
+
+          {/* Teacher Feedback Section */}
+          {!isDelivered && !feedbackSubmitted && (
+            <Card className="border-green-200 dark:border-green-800">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-lg">
+                  <span className="text-xl" aria-hidden="true">{"📝"}</span>
+                  Post-Lesson Feedback
+                </CardTitle>
+                <p className="text-sm text-muted-foreground">
+                  How did the lesson go? Rate your experience and mark this lesson as delivered.
+                </p>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <StarRating
+                  label="Overall, how did the lesson go?"
+                  value={overallRating}
+                  onChange={setOverallRating}
+                />
+                <StarRating
+                  label="How well did the hook grab attention?"
+                  value={hookEffectiveness}
+                  onChange={setHookEffectiveness}
+                />
+                <StarRating
+                  label="Did students understand the core concept?"
+                  value={conceptClarity}
+                  onChange={setConceptClarity}
+                />
+                <StarRating
+                  label="How engaged were students during the activity?"
+                  value={activityEngagement}
+                  onChange={setActivityEngagement}
+                />
+
+                <div className="space-y-2">
+                  <Label htmlFor="went-well" className="text-sm">What went well?</Label>
+                  <Textarea
+                    id="went-well"
+                    placeholder="e.g., Students loved the analogy about..."
+                    value={whatWentWell}
+                    onChange={(e) => setWhatWentWell(e.target.value)}
+                    rows={2}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="improve" className="text-sm">What would you change next time?</Label>
+                  <Textarea
+                    id="improve"
+                    placeholder="e.g., The activity took longer than expected..."
+                    value={whatToImprove}
+                    onChange={(e) => setWhatToImprove(e.target.value)}
+                    rows={2}
+                  />
+                </div>
+
+                <Button
+                  onClick={handleFeedbackSubmit}
+                  disabled={overallRating === 0 || feedbackSubmitting}
+                  className="w-full"
+                  size="lg"
+                >
+                  {feedbackSubmitting ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Submitting...
+                    </>
+                  ) : (
+                    "Submit Feedback & Mark as Delivered"
+                  )}
+                </Button>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Feedback submitted success */}
+          {feedbackSubmitted && (
+            <Card className="border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-900/20">
+              <CardContent className="flex flex-col items-center py-8 text-center">
+                <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/40">
+                  <CheckCircle2 className="h-7 w-7 text-green-600 dark:text-green-400" />
+                </div>
+                <h3 className="text-lg font-semibold text-foreground">Feedback submitted!</h3>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  This lesson is now marked as delivered. Great job teaching!
+                </p>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Already delivered indicator */}
+          {isDelivered && !feedbackSubmitted && (
+            <Card className="border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-900/20">
+              <CardContent className="flex items-center gap-3 py-4">
+                <CheckCircle2 className="h-5 w-5 text-green-600 dark:text-green-400" />
+                <div>
+                  <p className="font-medium text-foreground">Lesson delivered</p>
+                  <p className="text-sm text-muted-foreground">
+                    This lesson has been taught and can no longer be edited.
+                    {lessonData.feedbackCount ? ` ${lessonData.feedbackCount} feedback response(s) received.` : ""}
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          )}
         </div>
       </div>
     </main>

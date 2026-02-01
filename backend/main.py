@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from database import Base, engine
-from routers import analytics, feedback, lessons, rehearse, tts
+from routers import analytics, feedback, quiz, lessons, rehearse, tts
 
 # Create database tables
 Base.metadata.create_all(bind=engine)
@@ -28,6 +28,7 @@ app.include_router(rehearse.router)
 app.include_router(feedback.router)
 app.include_router(analytics.router)
 app.include_router(tts.router)
+app.include_router(quiz.router)
 
 
 @app.get("/")

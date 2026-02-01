@@ -26,6 +26,7 @@ class LessonSection(BaseModel):
     steps: Optional[list[str]] = None
     items: Optional[list[str]] = None
     questions: Optional[list[str]] = None
+    tasks: Optional[list[str]] = None
 
 
 class LessonContent(BaseModel):
@@ -35,6 +36,7 @@ class LessonContent(BaseModel):
     materials: LessonSection
     reflectionQuestions: LessonSection
     takeaway: LessonSection
+    homework: Optional[LessonSection] = None
     jargonAlerts: list[JargonAlert]
 
 
@@ -105,6 +107,27 @@ class RehearseResponse(BaseModel):
     tip: str
 
 
+class RehearseSummaryRequest(BaseModel):
+    messages: list[ChatMessage]
+    confidenceScore: float
+    jargonDetected: list[str]
+
+
+class ScoreBreakdown(BaseModel):
+    clarity: int  # 0-100
+    engagement: int  # 0-100
+    ageAppropriateness: int  # 0-100
+    encouragement: int  # 0-100
+
+
+class RehearseSummaryResponse(BaseModel):
+    overallGrade: str  # e.g., "B+", "A-"
+    scoreBreakdown: ScoreBreakdown
+    strengths: list[str]
+    suggestions: list[str]
+    keyMoment: str  # Best teaching moment from the conversation
+
+
 # --- Feedback Schemas ---
 
 class VolunteerFeedbackData(BaseModel):
@@ -162,3 +185,40 @@ class AnalyticsResponse(BaseModel):
     insights: list[InsightItem]
     topActivities: list[TopActivity]
     popularProfessions: list[PopularProfession]
+
+
+# --- Quiz Schemas ---
+
+class MCQOption(BaseModel):
+    A: str
+    B: str
+    C: str
+    D: str
+
+
+class MCQuestion(BaseModel):
+    id: int
+    question: str
+    options: MCQOption
+    correctAnswer: str  # "A", "B", "C", or "D"
+    explanation: str
+
+
+class QuizContent(BaseModel):
+    title: str
+    lessonConcept: str
+    ageGroup: str
+    totalQuestions: int
+    questions: list[MCQuestion]
+
+
+class QuizResponse(BaseModel):
+    id: int
+    lessonId: int
+    content: QuizContent
+    numQuestions: int
+    createdAt: str
+
+
+class QuizGenerateRequest(BaseModel):
+    numQuestions: int = 7

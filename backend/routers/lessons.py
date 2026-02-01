@@ -16,7 +16,7 @@ from schemas import (
     LessonSummary,
     LessonUpdateRequest,
 )
-from services.gemini import generate_text
+from services.claude_ai import generate_text
 from services.lesson_generator import generate_lesson
 
 router = APIRouter(prefix="/api/lessons", tags=["lessons"])
@@ -109,6 +109,9 @@ def edit_lesson_with_ai(lesson_id: int, req: LessonEditRequest, db: Session = De
     if not lesson:
         raise HTTPException(status_code=404, detail="Lesson not found")
 
+    if lesson.status == "delivered":
+        raise HTTPException(status_code=400, detail="Cannot edit a delivered lesson")
+
     current_content = json.loads(lesson.content)
 
     edit_prompt = f"""You are editing an existing lesson plan. Here is the current lesson content:
@@ -176,18 +179,29 @@ def _get_feedback_stats(lesson_id: int, db: Session) -> tuple[int, float | None]
     ratings = []
     for fb in feedbacks:
         data = json.loads(fb.data)
-        # Convert text ratings to numeric for averaging
-        rating_map = {"great": 5.0, "okay": 3.0, "flopped": 1.0}
-        if fb.type == "volunteer":
-            for key in ("hookRating", "activityRating"):
-                if key in data and data[key] in rating_map:
-                    ratings.append(rating_map[data[key]])
-        elif fb.type == "student":
-            if "funRating" in data and data["funRating"] in rating_map:
-                ratings.append(rating_map[data["funRating"]])
+        ratings.extend(_extract_ratings(fb.type, data))
 
     avg = round(sum(ratings) / len(ratings), 1) if ratings else None
     return count, avg
+
+
+def _extract_ratings(feedback_type: str, data: dict) -> list[float]:
+    """Extract numeric ratings from feedback data, supporting both old and new formats."""
+    ratings = []
+    # New format: numeric star ratings (1-5)
+    for key in ("overallRating", "hookEffectiveness", "conceptClarity", "activityEngagement"):
+        if key in data and isinstance(data[key], (int, float)) and data[key] > 0:
+            ratings.append(float(data[key]))
+    # Old format: text ratings
+    rating_map = {"great": 5.0, "okay": 3.0, "flopped": 1.0}
+    if feedback_type == "volunteer":
+        for key in ("hookRating", "activityRating"):
+            if key in data and data[key] in rating_map:
+                ratings.append(rating_map[data[key]])
+    elif feedback_type == "student":
+        if "funRating" in data and data["funRating"] in rating_map:
+            ratings.append(rating_map[data["funRating"]])
+    return ratings
 
 
 def _to_lesson_response(lesson: Lesson, db: Session) -> LessonResponse:

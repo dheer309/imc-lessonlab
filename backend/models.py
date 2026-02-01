@@ -21,6 +21,7 @@ class Lesson(Base):
 
     feedbacks = relationship("Feedback", back_populates="lesson", cascade="all, delete-orphan")
     rehearsal_sessions = relationship("RehearsalSession", back_populates="lesson", cascade="all, delete-orphan")
+    quizzes = relationship("Quiz", back_populates="lesson", cascade="all, delete-orphan")
 
 
 class Feedback(Base):
@@ -45,3 +46,15 @@ class RehearsalSession(Base):
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
 
     lesson = relationship("Lesson", back_populates="rehearsal_sessions")
+
+
+class Quiz(Base):
+    __tablename__ = "quizzes"
+
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    lesson_id = Column(Integer, ForeignKey("lessons.id"), nullable=False)
+    content = Column(Text, nullable=False)  # JSON string of MCQ questions + mark scheme
+    num_questions = Column(Integer, nullable=False, default=7)
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+
+    lesson = relationship("Lesson", back_populates="quizzes")

@@ -164,19 +164,17 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$i
 function RehearsePage() {
     const searchParams = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useSearchParams"])();
     const lessonId = searchParams.get("lessonId");
-    const [messages, setMessages] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])([
-        {
-            id: 1,
-            role: "assistant",
-            content: "Hi! I'm Max, and I'm 12 years old. My teacher said you're going to teach us something cool today about being a surgeon? I'm kind of nervous around doctors, but I'll try to pay attention! What are we learning about?"
-        }
-    ]);
+    const [messages, setMessages] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])([]);
+    const [lessonLoaded, setLessonLoaded] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(false);
     const [input, setInput] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])("");
     const [isWaiting, setIsWaiting] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(false);
     const [confidenceScore, setConfidenceScore] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(15);
     const [currentTip, setCurrentTip] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])("Start by introducing yourself and your profession in a fun, relatable way!");
     const [detectedJargon, setDetectedJargon] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])([]);
     const [showResults, setShowResults] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [summaryLoading, setSummaryLoading] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [strengths, setStrengths] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])([]);
+    const [suggestions, setSuggestions] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])([]);
     const [ttsEnabled, setTtsEnabled] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(true);
     const [isSpeaking, setIsSpeaking] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(false);
     const [isListening, setIsListening] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(false);
@@ -189,7 +187,8 @@ function RehearsePage() {
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useEffect"])(()=>{
         setRecognitionSupported(("TURBOPACK compile-time value", "undefined") !== "undefined" && ("SpeechRecognition" in window || "webkitSpeechRecognition" in window));
     }, []);
-    // Initialize speech recognition with continuous mode
+    // Initialize speech recognition - use non-continuous mode with manual restart
+    // continuous: true is unreliable across browsers and causes rapid on/off toggling
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useEffect"])(()=>{
         if ("TURBOPACK compile-time falsy", 0) //TURBOPACK unreachable
         ;
@@ -272,16 +271,46 @@ function RehearsePage() {
     }, [
         messages
     ]);
-    // Speak initial message
+    // Track student age for header
+    const [studentAge, setStudentAge] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(12);
+    // Fetch lesson and set dynamic greeting
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useEffect"])(()=>{
-        if (messages.length === 1 && ttsEnabled) {
-            const timer = setTimeout(()=>{
-                speak(messages[0].content);
-            }, 500);
-            return ()=>clearTimeout(timer);
+        if (lessonLoaded) return;
+        const ageFromGroup = (ageGroup)=>{
+            const num = parseInt(ageGroup.split("-")[0]);
+            return isNaN(num) ? 12 : num;
+        };
+        const setGreeting = (profession, concept, ageGroup)=>{
+            const age = ageGroup ? ageFromGroup(ageGroup) : 12;
+            setStudentAge(age);
+            const greeting = profession && concept ? `Hi! I'm Max, and I'm ${age} years old. My teacher said a ${profession.toLowerCase()} is coming to teach us about ${concept.toLowerCase()} today! That sounds really interesting. So, what are we going to learn?` : `Hi! I'm Max, and I'm ${age} years old. My teacher said someone cool is coming to teach us something today! What are we learning about?`;
+            setMessages([
+                {
+                    id: 1,
+                    role: "assistant",
+                    content: greeting
+                }
+            ]);
+            setLessonLoaded(true);
+            if (ttsEnabled) {
+                setTimeout(()=>speak(greeting), 500);
+            }
+        };
+        if (lessonId) {
+            fetch(`http://localhost:8000/api/lessons/${lessonId}`).then((res)=>res.ok ? res.json() : null).then((data)=>{
+                if (data) {
+                    setGreeting(data.profession, data.concept, data.ageGroup);
+                } else {
+                    setGreeting();
+                }
+            }).catch(()=>setGreeting());
+        } else {
+            setGreeting();
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [
+        lessonId
+    ]);
     const handleSend = async ()=>{
         if (!input.trim() || isWaiting) return;
         const userMessage = {
@@ -354,6 +383,40 @@ function RehearsePage() {
             handleSend();
         }
     };
+    const handleEndPractice = async ()=>{
+        stopSpeaking();
+        setSummaryLoading(true);
+        setShowResults(true);
+        try {
+            const res = await fetch("http://localhost:8000/api/rehearse/summary", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    messages: messages.map((m)=>({
+                            role: m.role,
+                            content: m.content
+                        })),
+                    confidenceScore,
+                    jargonDetected: detectedJargon
+                })
+            });
+            if (!res.ok) throw new Error("Summary failed");
+            const data = await res.json();
+            setStrengths(data.strengths);
+            setSuggestions(data.suggestions);
+        } catch  {
+            setStrengths([
+                "Completed a full practice session with Max"
+            ]);
+            setSuggestions([
+                "Try using simpler language and more real-world analogies"
+            ]);
+        } finally{
+            setSummaryLoading(false);
+        }
+    };
     const userMessageCount = messages.filter((m)=>m.role === "user").length;
     if (showResults) {
         return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("main", {
@@ -369,12 +432,12 @@ function RehearsePage() {
                                 children: "Practice Complete!"
                             }, void 0, false, {
                                 fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                lineNumber: 259,
+                                lineNumber: 322,
                                 columnNumber: 15
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                            lineNumber: 258,
+                            lineNumber: 321,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -399,7 +462,7 @@ function RehearsePage() {
                                                             className: "text-muted"
                                                         }, void 0, false, {
                                                             fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                                            lineNumber: 266,
+                                                            lineNumber: 329,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("circle", {
@@ -413,13 +476,13 @@ function RehearsePage() {
                                                             className: "text-primary"
                                                         }, void 0, false, {
                                                             fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                                            lineNumber: 275,
+                                                            lineNumber: 338,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                                    lineNumber: 265,
+                                                    lineNumber: 328,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -430,13 +493,13 @@ function RehearsePage() {
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                                    lineNumber: 286,
+                                                    lineNumber: 349,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                            lineNumber: 264,
+                                            lineNumber: 327,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -444,167 +507,158 @@ function RehearsePage() {
                                             children: "Confidence Score"
                                         }, void 0, false, {
                                             fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                            lineNumber: 290,
+                                            lineNumber: 353,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                    lineNumber: 263,
+                                    lineNumber: 326,
                                     columnNumber: 15
                                 }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "rounded-lg bg-green-50 dark:bg-green-900/20 p-4 text-left",
+                                summaryLoading ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "flex items-center justify-center gap-2 py-8 text-muted-foreground",
                                     children: [
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
-                                            className: "mb-2 flex items-center gap-2 font-semibold text-green-800 dark:text-green-400",
-                                            children: [
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$check$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__CheckCircle2$3e$__["CheckCircle2"], {
-                                                    className: "h-5 w-5"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                                    lineNumber: 296,
-                                                    columnNumber: 19
-                                                }, this),
-                                                "What Worked Well"
-                                            ]
-                                        }, void 0, true, {
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$loader$2d$circle$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Loader2$3e$__["Loader2"], {
+                                            className: "h-5 w-5 animate-spin"
+                                        }, void 0, false, {
                                             fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                            lineNumber: 295,
-                                            columnNumber: 17
+                                            lineNumber: 358,
+                                            columnNumber: 19
                                         }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("ul", {
-                                            className: "space-y-1 text-sm text-green-700 dark:text-green-300",
-                                            children: [
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
-                                                    children: "- Used relatable analogies to explain complex concepts"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                                    lineNumber: 300,
-                                                    columnNumber: 19
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
-                                                    children: "- Engaged Max with questions and activities"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                                    lineNumber: 301,
-                                                    columnNumber: 19
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
-                                                    children: "- Kept explanations age-appropriate"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                                    lineNumber: 302,
-                                                    columnNumber: 19
-                                                }, this)
-                                            ]
-                                        }, void 0, true, {
-                                            fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                            lineNumber: 299,
-                                            columnNumber: 17
-                                        }, this)
+                                        "Analyzing your teaching session..."
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                    lineNumber: 294,
-                                    columnNumber: 15
-                                }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "rounded-lg bg-amber-50 dark:bg-amber-900/20 p-4 text-left",
+                                    lineNumber: 357,
+                                    columnNumber: 17
+                                }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Fragment"], {
                                     children: [
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
-                                            className: "mb-2 flex items-center gap-2 font-semibold text-amber-800 dark:text-amber-400",
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "rounded-lg bg-green-50 dark:bg-green-900/20 p-4 text-left",
                                             children: [
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$lightbulb$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Lightbulb$3e$__["Lightbulb"], {
-                                                    className: "h-5 w-5"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                                    lineNumber: 309,
-                                                    columnNumber: 19
-                                                }, this),
-                                                "Suggestions for Improvement"
-                                            ]
-                                        }, void 0, true, {
-                                            fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                            lineNumber: 308,
-                                            columnNumber: 17
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("ul", {
-                                            className: "space-y-1 text-sm text-amber-700 dark:text-amber-300",
-                                            children: [
-                                                detectedJargon.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
+                                                    className: "mb-2 flex items-center gap-2 font-semibold text-green-800 dark:text-green-400",
                                                     children: [
-                                                        "- Simplify terms like: ",
-                                                        detectedJargon.slice(0, 3).map((t)=>`"${t}"`).join(", ")
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$check$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__CheckCircle2$3e$__["CheckCircle2"], {
+                                                            className: "h-5 w-5"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
+                                                            lineNumber: 366,
+                                                            columnNumber: 23
+                                                        }, this),
+                                                        "What Worked Well"
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                                    lineNumber: 314,
+                                                    lineNumber: 365,
                                                     columnNumber: 21
                                                 }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
-                                                    children: "- Add more pauses after key points"
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("ul", {
+                                                    className: "space-y-1 text-sm text-green-700 dark:text-green-300",
+                                                    children: strengths.map((s, i)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                                            children: [
+                                                                "- ",
+                                                                s
+                                                            ]
+                                                        }, i, true, {
+                                                            fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
+                                                            lineNumber: 371,
+                                                            columnNumber: 25
+                                                        }, this))
                                                 }, void 0, false, {
                                                     fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                                    lineNumber: 316,
-                                                    columnNumber: 19
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
-                                                    children: "- Include a quick recap at the end"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                                    lineNumber: 317,
-                                                    columnNumber: 19
+                                                    lineNumber: 369,
+                                                    columnNumber: 21
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                            lineNumber: 312,
-                                            columnNumber: 17
+                                            lineNumber: 364,
+                                            columnNumber: 19
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "rounded-lg bg-amber-50 dark:bg-amber-900/20 p-4 text-left",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
+                                                    className: "mb-2 flex items-center gap-2 font-semibold text-amber-800 dark:text-amber-400",
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$lightbulb$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Lightbulb$3e$__["Lightbulb"], {
+                                                            className: "h-5 w-5"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
+                                                            lineNumber: 379,
+                                                            columnNumber: 23
+                                                        }, this),
+                                                        "Suggestions for Improvement"
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
+                                                    lineNumber: 378,
+                                                    columnNumber: 21
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("ul", {
+                                                    className: "space-y-1 text-sm text-amber-700 dark:text-amber-300",
+                                                    children: suggestions.map((s, i)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                                            children: [
+                                                                "- ",
+                                                                s
+                                                            ]
+                                                        }, i, true, {
+                                                            fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
+                                                            lineNumber: 384,
+                                                            columnNumber: 25
+                                                        }, this))
+                                                }, void 0, false, {
+                                                    fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
+                                                    lineNumber: 382,
+                                                    columnNumber: 21
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
+                                            lineNumber: 377,
+                                            columnNumber: 19
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
+                                            asChild: true,
+                                            size: "lg",
+                                            className: "w-full",
+                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
+                                                href: lessonId ? `/lesson?id=${lessonId}` : "/library",
+                                                children: "Back to Lesson"
+                                            }, void 0, false, {
+                                                fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
+                                                lineNumber: 390,
+                                                columnNumber: 21
+                                            }, this)
+                                        }, void 0, false, {
+                                            fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
+                                            lineNumber: 389,
+                                            columnNumber: 19
                                         }, this)
                                     ]
-                                }, void 0, true, {
-                                    fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                    lineNumber: 307,
-                                    columnNumber: 15
-                                }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
-                                    asChild: true,
-                                    size: "lg",
-                                    className: "w-full",
-                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
-                                        href: lessonId ? `/feedback?lessonId=${lessonId}` : "/feedback",
-                                        children: "Ready to Teach!"
-                                    }, void 0, false, {
-                                        fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                        lineNumber: 322,
-                                        columnNumber: 17
-                                    }, this)
-                                }, void 0, false, {
-                                    fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                    lineNumber: 321,
-                                    columnNumber: 15
-                                }, this)
+                                }, void 0, true)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                            lineNumber: 261,
+                            lineNumber: 324,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                    lineNumber: 257,
+                    lineNumber: 320,
                     columnNumber: 11
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                lineNumber: 256,
+                lineNumber: 319,
                 columnNumber: 9
             }, this)
         }, void 0, false, {
             fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-            lineNumber: 255,
+            lineNumber: 318,
             columnNumber: 7
         }, this);
     }
@@ -629,12 +683,12 @@ function RehearsePage() {
                                                 className: "h-5 w-5"
                                             }, void 0, false, {
                                                 fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                                lineNumber: 343,
+                                                lineNumber: 413,
                                                 columnNumber: 17
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                            lineNumber: 339,
+                                            lineNumber: 409,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -644,27 +698,30 @@ function RehearsePage() {
                                                     children: "Practice with Max"
                                                 }, void 0, false, {
                                                     fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                                    lineNumber: 346,
+                                                    lineNumber: 416,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                     className: "text-sm text-muted-foreground",
-                                                    children: "AI Student, Age 12"
-                                                }, void 0, false, {
+                                                    children: [
+                                                        "AI Student, Age ",
+                                                        studentAge
+                                                    ]
+                                                }, void 0, true, {
                                                     fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                                    lineNumber: 347,
+                                                    lineNumber: 417,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                            lineNumber: 345,
+                                            lineNumber: 415,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                    lineNumber: 338,
+                                    lineNumber: 408,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -683,49 +740,46 @@ function RehearsePage() {
                                                 className: "h-5 w-5"
                                             }, void 0, false, {
                                                 fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                                lineNumber: 365,
+                                                lineNumber: 435,
                                                 columnNumber: 31
                                             }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$volume$2d$x$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__VolumeX$3e$__["VolumeX"], {
                                                 className: "h-5 w-5"
                                             }, void 0, false, {
                                                 fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                                lineNumber: 365,
+                                                lineNumber: 435,
                                                 columnNumber: 65
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                            lineNumber: 352,
+                                            lineNumber: 422,
                                             columnNumber: 15
                                         }, this),
                                         userMessageCount >= 4 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
                                             variant: "outline",
                                             size: "sm",
-                                            onClick: ()=>{
-                                                stopSpeaking();
-                                                setShowResults(true);
-                                            },
+                                            onClick: handleEndPractice,
                                             className: "bg-transparent",
                                             children: "End Practice"
                                         }, void 0, false, {
                                             fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                            lineNumber: 368,
+                                            lineNumber: 438,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                    lineNumber: 350,
+                                    lineNumber: 420,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                            lineNumber: 337,
+                            lineNumber: 407,
                             columnNumber: 11
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                        lineNumber: 336,
+                        lineNumber: 406,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -746,7 +800,7 @@ function RehearsePage() {
                                                             children: "M"
                                                         }, void 0, false, {
                                                             fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                                            lineNumber: 405,
+                                                            lineNumber: 472,
                                                             columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -754,20 +808,20 @@ function RehearsePage() {
                                                             children: "Max"
                                                         }, void 0, false, {
                                                             fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                                            lineNumber: 408,
+                                                            lineNumber: 475,
                                                             columnNumber: 23
                                                         }, this),
                                                         isSpeaking && ttsEnabled && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$volume$2d$2$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Volume2$3e$__["Volume2"], {
                                                             className: "h-3 w-3 text-primary animate-pulse"
                                                         }, void 0, false, {
                                                             fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                                            lineNumber: 410,
+                                                            lineNumber: 477,
                                                             columnNumber: 25
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                                    lineNumber: 404,
+                                                    lineNumber: 471,
                                                     columnNumber: 21
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -775,18 +829,18 @@ function RehearsePage() {
                                                     children: message.content
                                                 }, void 0, false, {
                                                     fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                                    lineNumber: 414,
+                                                    lineNumber: 481,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                            lineNumber: 395,
+                                            lineNumber: 462,
                                             columnNumber: 17
                                         }, this)
                                     }, message.id, false, {
                                         fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                        lineNumber: 388,
+                                        lineNumber: 455,
                                         columnNumber: 15
                                     }, this)),
                                 isWaiting && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -802,7 +856,7 @@ function RehearsePage() {
                                                         children: "M"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                                        lineNumber: 422,
+                                                        lineNumber: 489,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -810,49 +864,49 @@ function RehearsePage() {
                                                         children: "Max"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                                        lineNumber: 425,
+                                                        lineNumber: 492,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                                lineNumber: 421,
+                                                lineNumber: 488,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$loader$2d$circle$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Loader2$3e$__["Loader2"], {
                                                 className: "h-4 w-4 animate-spin text-muted-foreground"
                                             }, void 0, false, {
                                                 fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                                lineNumber: 427,
+                                                lineNumber: 494,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                        lineNumber: 420,
+                                        lineNumber: 487,
                                         columnNumber: 17
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                    lineNumber: 419,
+                                    lineNumber: 486,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                     ref: messagesEndRef
                                 }, void 0, false, {
                                     fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                    lineNumber: 431,
+                                    lineNumber: 498,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                            lineNumber: 386,
+                            lineNumber: 453,
                             columnNumber: 11
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                        lineNumber: 385,
+                        lineNumber: 452,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -871,18 +925,18 @@ function RehearsePage() {
                                             className: "h-4 w-4"
                                         }, void 0, false, {
                                             fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                            lineNumber: 450,
+                                            lineNumber: 517,
                                             columnNumber: 32
                                         }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$mic$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Mic$3e$__["Mic"], {
                                             className: "h-4 w-4"
                                         }, void 0, false, {
                                             fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                            lineNumber: 450,
+                                            lineNumber: 517,
                                             columnNumber: 65
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                        lineNumber: 440,
+                                        lineNumber: 507,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Input"], {
@@ -893,7 +947,7 @@ function RehearsePage() {
                                         className: "flex-1"
                                     }, void 0, false, {
                                         fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                        lineNumber: 453,
+                                        lineNumber: 520,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
@@ -904,7 +958,7 @@ function RehearsePage() {
                                                 className: "h-4 w-4"
                                             }, void 0, false, {
                                                 fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                                lineNumber: 461,
+                                                lineNumber: 528,
                                                 columnNumber: 15
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -912,19 +966,19 @@ function RehearsePage() {
                                                 children: "Send message"
                                             }, void 0, false, {
                                                 fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                                lineNumber: 462,
+                                                lineNumber: 529,
                                                 columnNumber: 15
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                        lineNumber: 460,
+                                        lineNumber: 527,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                lineNumber: 437,
+                                lineNumber: 504,
                                 columnNumber: 11
                             }, this),
                             recognitionSupported && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -932,25 +986,25 @@ function RehearsePage() {
                                 children: isListening ? "Mic is on - speak naturally, click mic to stop" : "Click the microphone to speak your response"
                             }, void 0, false, {
                                 fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                lineNumber: 466,
+                                lineNumber: 533,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                        lineNumber: 436,
+                        lineNumber: 503,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                lineNumber: 334,
+                lineNumber: 404,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                className: "w-full border-t border-border bg-muted/30 lg:w-80 lg:border-l lg:border-t-0",
+                className: "w-full border-t border-border bg-muted/30 lg:w-80 lg:border-l lg:border-t-0 lg:overflow-y-auto",
                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                    className: "p-4 space-y-4",
+                    className: "max-h-64 overflow-y-auto p-4 space-y-4 lg:max-h-none",
                     children: [
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Card"], {
                             children: [
@@ -961,12 +1015,12 @@ function RehearsePage() {
                                         children: "Teaching Score"
                                     }, void 0, false, {
                                         fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                        lineNumber: 479,
+                                        lineNumber: 546,
                                         columnNumber: 15
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                    lineNumber: 478,
+                                    lineNumber: 545,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -989,7 +1043,7 @@ function RehearsePage() {
                                                                 className: "text-muted"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                                                lineNumber: 485,
+                                                                lineNumber: 552,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("circle", {
@@ -1003,13 +1057,13 @@ function RehearsePage() {
                                                                 className: "text-primary transition-all duration-500"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                                                lineNumber: 494,
+                                                                lineNumber: 561,
                                                                 columnNumber: 21
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                                        lineNumber: 484,
+                                                        lineNumber: 551,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1020,13 +1074,13 @@ function RehearsePage() {
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                                        lineNumber: 505,
+                                                        lineNumber: 572,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                                lineNumber: 483,
+                                                lineNumber: 550,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1034,24 +1088,24 @@ function RehearsePage() {
                                                 children: "Based on clarity, engagement, and age-appropriateness"
                                             }, void 0, false, {
                                                 fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                                lineNumber: 509,
+                                                lineNumber: 576,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                        lineNumber: 482,
+                                        lineNumber: 549,
                                         columnNumber: 15
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                    lineNumber: 481,
+                                    lineNumber: 548,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                            lineNumber: 477,
+                            lineNumber: 544,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Card"], {
@@ -1065,19 +1119,19 @@ function RehearsePage() {
                                                 className: "h-4 w-4 text-primary"
                                             }, void 0, false, {
                                                 fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                                lineNumber: 520,
+                                                lineNumber: 587,
                                                 columnNumber: 17
                                             }, this),
                                             "Voice Mode"
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                        lineNumber: 519,
+                                        lineNumber: 586,
                                         columnNumber: 15
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                    lineNumber: 518,
+                                    lineNumber: 585,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -1086,18 +1140,18 @@ function RehearsePage() {
                                         children: ttsEnabled ? "Max will speak their responses aloud." : "Voice is muted. Click the speaker icon to enable."
                                     }, void 0, false, {
                                         fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                        lineNumber: 525,
+                                        lineNumber: 592,
                                         columnNumber: 15
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                    lineNumber: 524,
+                                    lineNumber: 591,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                            lineNumber: 517,
+                            lineNumber: 584,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Card"], {
@@ -1111,19 +1165,19 @@ function RehearsePage() {
                                                 className: "h-4 w-4 text-amber-500"
                                             }, void 0, false, {
                                                 fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                                lineNumber: 537,
+                                                lineNumber: 604,
                                                 columnNumber: 17
                                             }, this),
                                             "Coaching Tip"
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                        lineNumber: 536,
+                                        lineNumber: 603,
                                         columnNumber: 15
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                    lineNumber: 535,
+                                    lineNumber: 602,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -1132,18 +1186,18 @@ function RehearsePage() {
                                         children: currentTip
                                     }, void 0, false, {
                                         fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                        lineNumber: 542,
+                                        lineNumber: 609,
                                         columnNumber: 15
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                    lineNumber: 541,
+                                    lineNumber: 608,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                            lineNumber: 534,
+                            lineNumber: 601,
                             columnNumber: 11
                         }, this),
                         detectedJargon.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Card"], {
@@ -1158,19 +1212,19 @@ function RehearsePage() {
                                                 className: "h-4 w-4"
                                             }, void 0, false, {
                                                 fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                                lineNumber: 551,
+                                                lineNumber: 618,
                                                 columnNumber: 19
                                             }, this),
                                             "Jargon Detected"
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                        lineNumber: 550,
+                                        lineNumber: 617,
                                         columnNumber: 17
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                    lineNumber: 549,
+                                    lineNumber: 616,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Developer$2f$Hackathons$2f$imc$2d$lessonlab$2f$frontend$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -1185,40 +1239,40 @@ function RehearsePage() {
                                                 ]
                                             }, term, true, {
                                                 fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                                lineNumber: 558,
+                                                lineNumber: 625,
                                                 columnNumber: 21
                                             }, this))
                                     }, void 0, false, {
                                         fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                        lineNumber: 556,
+                                        lineNumber: 623,
                                         columnNumber: 17
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                                    lineNumber: 555,
+                                    lineNumber: 622,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                            lineNumber: 548,
+                            lineNumber: 615,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                    lineNumber: 475,
+                    lineNumber: 542,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-                lineNumber: 474,
+                lineNumber: 541,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/Developer/Hackathons/imc-lessonlab/frontend/app/rehearse/page.tsx",
-        lineNumber: 332,
+        lineNumber: 402,
         columnNumber: 5
     }, this);
 }

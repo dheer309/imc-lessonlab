@@ -4,10 +4,11 @@ import React from "react"
 import { useState, useRef, useEffect, useCallback } from "react"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
-import { Send, ArrowLeft, AlertTriangle, Lightbulb, CheckCircle2, Volume2, VolumeX, Mic, MicOff, Loader2 } from "lucide-react"
+import { Send, ArrowLeft, AlertTriangle, Lightbulb, CheckCircle2, Volume2, VolumeX, Mic, MicOff, Loader2, Sparkles } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
+import { Progress } from "@/components/ui/progress"
 import { cn } from "@/lib/utils"
 
 interface Message {
@@ -19,19 +20,20 @@ interface Message {
 export default function RehearsePage() {
   const searchParams = useSearchParams()
   const lessonId = searchParams.get("lessonId")
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: 1,
-      role: "assistant",
-      content: "Hi! I'm Max, and I'm 12 years old. My teacher said you're going to teach us something cool today about being a surgeon? I'm kind of nervous around doctors, but I'll try to pay attention! What are we learning about?",
-    },
-  ])
+  const [messages, setMessages] = useState<Message[]>([])
+  const [lessonLoaded, setLessonLoaded] = useState(false)
   const [input, setInput] = useState("")
   const [isWaiting, setIsWaiting] = useState(false)
   const [confidenceScore, setConfidenceScore] = useState(15)
   const [currentTip, setCurrentTip] = useState("Start by introducing yourself and your profession in a fun, relatable way!")
   const [detectedJargon, setDetectedJargon] = useState<string[]>([])
   const [showResults, setShowResults] = useState(false)
+  const [summaryLoading, setSummaryLoading] = useState(false)
+  const [overallGrade, setOverallGrade] = useState("")
+  const [scoreBreakdown, setScoreBreakdown] = useState<{clarity: number; engagement: number; ageAppropriateness: number; encouragement: number} | null>(null)
+  const [strengths, setStrengths] = useState<string[]>([])
+  const [suggestions, setSuggestions] = useState<string[]>([])
+  const [keyMoment, setKeyMoment] = useState("")
   const [ttsEnabled, setTtsEnabled] = useState(true)
   const [isSpeaking, setIsSpeaking] = useState(false)
   const [isListening, setIsListening] = useState(false)
@@ -49,43 +51,45 @@ export default function RehearsePage() {
     )
   }, [])
 
-  // Initialize speech recognition with continuous mode
+  // Initialize speech recognition - use non-continuous mode with manual restart
+  // continuous: true is unreliable across browsers and causes rapid on/off toggling
   useEffect(() => {
     if (recognitionSupported && typeof window !== "undefined") {
       const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition
       recognitionRef.current = new SpeechRecognitionAPI()
-      recognitionRef.current.continuous = true
-      recognitionRef.current.interimResults = true
+      recognitionRef.current.continuous = false
+      recognitionRef.current.interimResults = false
       recognitionRef.current.lang = "en-US"
 
       recognitionRef.current.onresult = (event: SpeechRecognitionEvent) => {
-        let finalTranscript = ""
-
-        for (let i = event.resultIndex; i < event.results.length; i++) {
-          const transcript = event.results[i][0].transcript
-          if (event.results[i].isFinal) {
-            finalTranscript += transcript
-          }
-        }
-
-        if (finalTranscript) {
-          setInput((prev) => prev + finalTranscript)
+        const transcript = event.results[0][0].transcript
+        if (transcript) {
+          setInput((prev) => (prev ? prev + " " + transcript : transcript))
         }
       }
 
-      recognitionRef.current.onerror = () => {
-        // Don't stop listening on transient errors
+      recognitionRef.current.onerror = (event) => {
+        // Only stop on fatal errors, not "no-speech" or "aborted"
+        if (event.error === "not-allowed" || event.error === "service-not-available") {
+          isListeningRef.current = false
+          setIsListening(false)
+        }
       }
 
       recognitionRef.current.onend = () => {
-        // If we're still supposed to be listening, restart (browser may stop unexpectedly)
+        // If user wants to keep listening, restart after a short delay
+        // The delay prevents rapid start/stop loops
         if (isListeningRef.current) {
-          try {
-            recognitionRef.current?.start()
-          } catch {
-            isListeningRef.current = false
-            setIsListening(false)
-          }
+          setTimeout(() => {
+            if (isListeningRef.current && recognitionRef.current) {
+              try {
+                recognitionRef.current.start()
+              } catch {
+                isListeningRef.current = false
+                setIsListening(false)
+              }
+            }
+          }, 300)
         } else {
           setIsListening(false)
         }
@@ -169,16 +173,50 @@ export default function RehearsePage() {
     scrollToBottom()
   }, [messages])
 
-  // Speak initial message
+  // Track student age for header
+  const [studentAge, setStudentAge] = useState(12)
+
+  // Fetch lesson and set dynamic greeting
   useEffect(() => {
-    if (messages.length === 1 && ttsEnabled) {
-      const timer = setTimeout(() => {
-        speak(messages[0].content)
-      }, 500)
-      return () => clearTimeout(timer)
+    if (lessonLoaded) return
+
+    const ageFromGroup = (ageGroup: string): number => {
+      const num = parseInt(ageGroup.split("-")[0])
+      return isNaN(num) ? 12 : num
+    }
+
+    const setGreeting = (profession?: string, concept?: string, ageGroup?: string) => {
+      const age = ageGroup ? ageFromGroup(ageGroup) : 12
+      setStudentAge(age)
+
+      const greeting = profession && concept
+        ? `Hi! I'm Max, and I'm ${age} years old. My teacher said a ${profession.toLowerCase()} is coming to teach us about ${concept.toLowerCase()} today! That sounds really interesting. So, what are we going to learn?`
+        : `Hi! I'm Max, and I'm ${age} years old. My teacher said someone cool is coming to teach us something today! What are we learning about?`
+
+      setMessages([{ id: 1, role: "assistant", content: greeting }])
+      setLessonLoaded(true)
+
+      if (ttsEnabled) {
+        setTimeout(() => speak(greeting), 500)
+      }
+    }
+
+    if (lessonId) {
+      fetch(`http://localhost:8000/api/lessons/${lessonId}`)
+        .then((res) => res.ok ? res.json() : null)
+        .then((data) => {
+          if (data) {
+            setGreeting(data.profession, data.concept, data.ageGroup)
+          } else {
+            setGreeting()
+          }
+        })
+        .catch(() => setGreeting())
+    } else {
+      setGreeting()
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [lessonId])
 
   const handleSend = async () => {
     if (!input.trim() || isWaiting) return
@@ -248,81 +286,181 @@ export default function RehearsePage() {
     }
   }
 
+  const handleEndPractice = async () => {
+    stopSpeaking()
+    setSummaryLoading(true)
+    setShowResults(true)
+
+    try {
+      const res = await fetch("http://localhost:8000/api/rehearse/summary", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          messages: messages.map((m) => ({ role: m.role, content: m.content })),
+          confidenceScore,
+          jargonDetected: detectedJargon,
+        }),
+      })
+
+      if (!res.ok) throw new Error("Summary failed")
+
+      const data = await res.json()
+      setOverallGrade(data.overallGrade)
+      setScoreBreakdown(data.scoreBreakdown)
+      setStrengths(data.strengths)
+      setSuggestions(data.suggestions)
+      setKeyMoment(data.keyMoment)
+    } catch {
+      setOverallGrade("C")
+      setScoreBreakdown({ clarity: 50, engagement: 50, ageAppropriateness: 50, encouragement: 50 })
+      setStrengths(["Completed a full practice session with Max"])
+      setSuggestions(["Try using simpler language and more real-world analogies"])
+      setKeyMoment("You showed up and practiced — that's the most important first step!")
+    } finally {
+      setSummaryLoading(false)
+    }
+  }
+
   const userMessageCount = messages.filter((m) => m.role === "user").length
 
   if (showResults) {
+    const gradeColor = overallGrade.startsWith("A") ? "text-green-600 dark:text-green-400"
+      : overallGrade.startsWith("B") ? "text-blue-600 dark:text-blue-400"
+      : overallGrade.startsWith("C") ? "text-amber-600 dark:text-amber-400"
+      : "text-red-600 dark:text-red-400"
+
     return (
       <main className="min-h-[calc(100vh-4rem)] px-4 py-8 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-2xl">
-          <Card className="text-center">
-            <CardHeader>
-              <CardTitle className="text-2xl">Practice Complete!</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-8">
-              {/* Final Score */}
-              <div className="flex flex-col items-center">
-                <div className="relative flex h-32 w-32 items-center justify-center">
-                  <svg className="h-full w-full -rotate-90">
-                    <circle
-                      cx="64"
-                      cy="64"
-                      r="56"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="12"
-                      className="text-muted"
-                    />
-                    <circle
-                      cx="64"
-                      cy="64"
-                      r="56"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="12"
-                      strokeDasharray={`${confidenceScore * 3.52} 352`}
-                      className="text-primary"
-                    />
-                  </svg>
-                  <span className="absolute text-3xl font-bold text-foreground">
-                    {confidenceScore}%
-                  </span>
+        <div className="mx-auto max-w-2xl space-y-6">
+          {/* Grade + Confidence Header */}
+          <Card>
+            <CardContent className="py-8">
+              <h2 className="mb-6 text-center text-2xl font-bold text-foreground">Practice Complete!</h2>
+              <div className="flex items-center justify-center gap-8">
+                {/* Overall Grade */}
+                <div className="flex flex-col items-center">
+                  <div className={cn("flex h-20 w-20 items-center justify-center rounded-2xl border-2 border-current", gradeColor)}>
+                    <span className={cn("text-3xl font-bold", gradeColor)}>
+                      {summaryLoading ? "..." : overallGrade}
+                    </span>
+                  </div>
+                  <p className="mt-2 text-sm font-medium text-muted-foreground">Overall Grade</p>
                 </div>
-                <p className="mt-2 text-lg font-medium text-foreground">Confidence Score</p>
-              </div>
 
-              {/* What Worked Well */}
-              <div className="rounded-lg bg-green-50 dark:bg-green-900/20 p-4 text-left">
-                <h3 className="mb-2 flex items-center gap-2 font-semibold text-green-800 dark:text-green-400">
-                  <CheckCircle2 className="h-5 w-5" />
-                  What Worked Well
-                </h3>
-                <ul className="space-y-1 text-sm text-green-700 dark:text-green-300">
-                  <li>- Used relatable analogies to explain complex concepts</li>
-                  <li>- Engaged Max with questions and activities</li>
-                  <li>- Kept explanations age-appropriate</li>
-                </ul>
+                {/* Confidence Score Ring */}
+                <div className="flex flex-col items-center">
+                  <div className="relative flex h-20 w-20 items-center justify-center">
+                    <svg className="h-full w-full -rotate-90">
+                      <circle cx="40" cy="40" r="34" fill="none" stroke="currentColor" strokeWidth="8" className="text-muted" />
+                      <circle cx="40" cy="40" r="34" fill="none" stroke="currentColor" strokeWidth="8"
+                        strokeDasharray={`${confidenceScore * 2.14} 214`} className="text-primary transition-all duration-500" />
+                    </svg>
+                    <span className="absolute text-lg font-bold text-foreground">{confidenceScore}%</span>
+                  </div>
+                  <p className="mt-2 text-sm font-medium text-muted-foreground">Confidence</p>
+                </div>
               </div>
-
-              {/* Suggestions */}
-              <div className="rounded-lg bg-amber-50 dark:bg-amber-900/20 p-4 text-left">
-                <h3 className="mb-2 flex items-center gap-2 font-semibold text-amber-800 dark:text-amber-400">
-                  <Lightbulb className="h-5 w-5" />
-                  Suggestions for Improvement
-                </h3>
-                <ul className="space-y-1 text-sm text-amber-700 dark:text-amber-300">
-                  {detectedJargon.length > 0 && (
-                    <li>- Simplify terms like: {detectedJargon.slice(0, 3).map(t => `"${t}"`).join(", ")}</li>
-                  )}
-                  <li>- Add more pauses after key points</li>
-                  <li>- Include a quick recap at the end</li>
-                </ul>
-              </div>
-
-              <Button asChild size="lg" className="w-full">
-                <Link href={lessonId ? `/feedback?lessonId=${lessonId}` : "/feedback"}>Ready to Teach!</Link>
-              </Button>
             </CardContent>
           </Card>
+
+          {summaryLoading ? (
+            <Card>
+              <CardContent className="flex items-center justify-center gap-2 py-12 text-muted-foreground">
+                <Loader2 className="h-5 w-5 animate-spin" />
+                Analyzing your teaching session...
+              </CardContent>
+            </Card>
+          ) : (
+            <>
+              {/* Score Breakdown */}
+              {scoreBreakdown && (
+                <Card>
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-lg">Score Breakdown</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    {[
+                      { label: "Clarity", value: scoreBreakdown.clarity, desc: "Clear, simple explanations" },
+                      { label: "Engagement", value: scoreBreakdown.engagement, desc: "Interactive, interesting dialogue" },
+                      { label: "Age-Appropriateness", value: scoreBreakdown.ageAppropriateness, desc: "Suitable language and tone" },
+                      { label: "Encouragement", value: scoreBreakdown.encouragement, desc: "Positive, confidence-building" },
+                    ].map((dim) => (
+                      <div key={dim.label} className="space-y-1.5">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <span className="text-sm font-medium text-foreground">{dim.label}</span>
+                            <span className="ml-2 text-xs text-muted-foreground">{dim.desc}</span>
+                          </div>
+                          <span className={cn(
+                            "text-sm font-bold",
+                            dim.value >= 75 ? "text-green-600 dark:text-green-400"
+                              : dim.value >= 50 ? "text-amber-600 dark:text-amber-400"
+                              : "text-red-600 dark:text-red-400"
+                          )}>
+                            {dim.value}%
+                          </span>
+                        </div>
+                        <Progress value={dim.value} className="h-2" />
+                      </div>
+                    ))}
+                  </CardContent>
+                </Card>
+              )}
+
+              {/* Key Moment */}
+              {keyMoment && (
+                <Card className="border-primary/20 bg-primary/5">
+                  <CardContent className="flex gap-3 py-4">
+                    <Sparkles className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
+                    <div className="text-left">
+                      <p className="text-sm font-semibold text-primary">Best Teaching Moment</p>
+                      <p className="mt-1 text-sm leading-relaxed text-foreground">{keyMoment}</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+
+              {/* What Worked Well */}
+              <Card>
+                <CardContent className="py-4">
+                  <h3 className="mb-3 flex items-center gap-2 font-semibold text-green-800 dark:text-green-400">
+                    <CheckCircle2 className="h-5 w-5" />
+                    What Worked Well
+                  </h3>
+                  <ul className="space-y-2 text-left text-sm text-green-700 dark:text-green-300">
+                    {strengths.map((s, i) => (
+                      <li key={i} className="flex gap-2">
+                        <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-green-500" />
+                        {s}
+                      </li>
+                    ))}
+                  </ul>
+                </CardContent>
+              </Card>
+
+              {/* Suggestions */}
+              <Card>
+                <CardContent className="py-4">
+                  <h3 className="mb-3 flex items-center gap-2 font-semibold text-amber-800 dark:text-amber-400">
+                    <Lightbulb className="h-5 w-5" />
+                    Suggestions for Next Time
+                  </h3>
+                  <ul className="space-y-2 text-left text-sm text-amber-700 dark:text-amber-300">
+                    {suggestions.map((s, i) => (
+                      <li key={i} className="flex gap-2">
+                        <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-amber-500" />
+                        {s}
+                      </li>
+                    ))}
+                  </ul>
+                </CardContent>
+              </Card>
+
+              <Button asChild size="lg" className="w-full">
+                <Link href={lessonId ? `/lesson?id=${lessonId}` : "/library"}>Back to Lesson</Link>
+              </Button>
+            </>
+          )}
         </div>
       </main>
     )
@@ -344,7 +482,7 @@ export default function RehearsePage() {
               </Link>
               <div>
                 <h1 className="font-semibold text-foreground">Practice with Max</h1>
-                <p className="text-sm text-muted-foreground">AI Student, Age 12</p>
+                <p className="text-sm text-muted-foreground">AI Student, Age {studentAge}</p>
               </div>
             </div>
             <div className="flex items-center gap-2">
@@ -368,10 +506,7 @@ export default function RehearsePage() {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => {
-                    stopSpeaking()
-                    setShowResults(true)
-                  }}
+                  onClick={handleEndPractice}
                   className="bg-transparent"
                 >
                   End Practice
@@ -471,8 +606,8 @@ export default function RehearsePage() {
       </div>
 
       {/* Sidebar */}
-      <div className="w-full border-t border-border bg-muted/30 lg:w-80 lg:border-l lg:border-t-0">
-        <div className="p-4 space-y-4">
+      <div className="w-full border-t border-border bg-muted/30 lg:w-80 lg:border-l lg:border-t-0 lg:overflow-y-auto">
+        <div className="max-h-64 overflow-y-auto p-4 space-y-4 lg:max-h-none">
           {/* Confidence Score */}
           <Card>
             <CardHeader className="pb-2">
