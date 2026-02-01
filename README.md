@@ -1,4 +1,5 @@
-# imc-lessonlab
+# IMC LessonLab
+From expert to educator in 60 seconds
 
 ## Local Setup
 
